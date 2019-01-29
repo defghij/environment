@@ -57,3 +57,6 @@ set expandtab
 
 "Enable line numbers
 set number
+
+"Enable mouse
+set mouse=a
