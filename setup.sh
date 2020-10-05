@@ -12,6 +12,12 @@ echo "creating sym links: ~/<dot-files> -> $DIR"
 ln -s $DIR/.vimrc ~/.vimrc
 ln -s $DIR/.tmux.conf ~/.tmux.conf
 
+echo "Getting Vim addon manager Plug via curl"
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+echo "Using Plug to install addons in the .vimrc"
+vim blank -c PlugInstall -c quit -c quit
 
 
-echo "#### Finished ####
+echo "#### Finished ####"
