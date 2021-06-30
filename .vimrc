@@ -60,19 +60,15 @@ let g:airline_symbols.notexists = 'Ɇ'
 let g:airline_symbols.whitespace ='' 		"'Ξ'
 
 "==== Manual vim settings
-"======== tab
 set tabstop=2
 set shiftwidth=2
 set expandtab
 
-"======== Enable line numbers
 set number
-
-"======== Enable mouse
 set mouse=a
-
-"======== No swap files
 set noswapfile
+
+set virtualedit=all
 
 "======== Remap Arrow Keys
 
