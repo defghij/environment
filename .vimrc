@@ -1,4 +1,4 @@
-" Specify a directory for plugins
+
 " - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
@@ -11,20 +11,22 @@ call plug#begin('~/.vim/plugged')
 Plug 'https://github.com/tpope/vim-sensible.git'
 
 "Git integration
-Plug 'https://github.com/tpope/vim-fugitive.git'
-Plug 'https://github.com/junegunn/vim-github-dashboard.git'
+"Plug 'https://github.com/tpope/vim-fugitive.git'
+"Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
-"Plug '~/my-prototype-plugin'
 "Statusline customization
-Plug 'https://github.com/vim-airline/vim-airline.git'
-Plug 'https://github.com/vim-airline/vim-airline-themes.git'
-Plug 'https://github.com/powerline/fonts.git'
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
+"Plug 'arcticicestudio/nord-vim'
+"Plug 'xero/sourcerer.vim'
+Plug 'dracula/vim', { 'as': 'dracula' }
+
 
 "Language interpretation
 Plug 'https://github.com/vim-syntastic/syntastic.git'
 
 "Language client for neovim
-Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh', }
+"Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh', }
 
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -33,35 +35,24 @@ Plug 'junegunn/fzf'
 "ALE for error symbol in the left side symbol gutter
 Plug 'w0rp/ale'
 
+" LSP
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" NerdTree
+Plug 'preservim/nerdtree'
+
+" Start screen
+Plug 'mhinz/vim-startify'
+
+" Note taking
+Plug 'vimwiki/vimwiki'
+
 
 " Initialize plugin system
 call plug#end()
 
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-
-" unicode symbols
-let g:airline_left_sep = '' "<insert> Ctrl+V U nnnn esc
-let g:airline_right_sep = ''
-let g:airline_symbols.crypt = '🔒'
-let g:airline_symbols.linenr = '☰'
-let g:airline_symbols.linenr = '␊'
-let g:airline_symbols.linenr = '␤'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.maxlinenr = ''
-let g:airline_symbols.maxlinenr = '李'		"'㏑'
-let g:airline_symbols.branch ='⎇ '
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.spell = 'Ꞩ'
-let g:airline_symbols.notexists = 'Ɇ'
-let g:airline_symbols.whitespace ='' 		"'Ξ'
 
 "Manual vim settings
-"
-"tab -> 2 spaces
 set tabstop=2
 set shiftwidth=2
 set expandtab
@@ -75,71 +66,72 @@ set mouse=a
 "No swap files
 set noswapfile
 
+" For VimWiki
+set nocompatible
+filetype plugin on
+syntax on
+let g:vimwiki_list = [{'path': '/media/chuck/CORVID32/Chuck/wiki',
+                      \ 'syntax': 'markdown', 'ext': '.md'}]
+
+set hlsearch
+
+" Colors
+let g:dracula_colorterm = 0
+colorscheme dracula
+let g:airline_powerline_fonts = 1
+
+" Nerd Tree
+nnoremap <leader>n :NERDTree<CR>
+let g:NERDTreeHijackNetrw = 1
+autocmd VimEnter *
+            \   if !argc()
+            \ |   Startify
+            \ |   NERDTree
+            \ |   wincmd w
+            \ | endif
+
+
+" Folding
+set foldmethod=syntax
+hi Folded guibg=NONE
+hi Folded ctermbg=NONE
+hi Folded gui=NONE
+hi Folded cterm=NONE
+hi Type ctermbg=NONE
+hi Comment ctermbg=NONE
+hi RustDocComment ctermbg=NONE
+
+function! MyFoldText()
+  let sline = getline(v:foldstart)
+  let eline = getline(v:foldend)
+  let folded_line_num = v:foldend - v:foldstart
+  let sline_text = substitute(sline, '^"{\+', '', 'g')
+  let eline_text = substitute(eline, '^"\+}', '', 'g')
+  let fline_text = '...' . folded_line_num . '...'
+  let fillcharcount = &textwidth - len(sline_text) - len(eline_text) - len(fline_text)
+  return sline_text . fline_text . eline_text . repeat(' ', fillcharcount)
+endfunction
+
+set foldtext=MyFoldText()
+
 "Language client for vim (LanguageClient-neovim)
 "====================================================================================
-" Required for operations modifying multiple buffers like rename.
 set hidden
-"
-"\ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
- let g:LanguageClient_serverCommands = {
-     \ 'rust': ['/home/defghij/.local/bin/rust-analyzer'],
-     \ 'python': ['/home/defghij/.local/bin/pyls'],
-     \ }
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gh :call ShowDocumentation()<CR>
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
 
-let g:LanguageClient_autoStart = 1
-"let g:LanguageClient_hoverPreview = "Never" "requires vim v8.
-
-"<leader> is not currently defined so defaults to '\'. i.e. use '\lm' to bring 
-" up the context menu
-function SetLSPShortcuts()
-  nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
-  nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
-  nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
-  nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-  nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
-  nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
-  nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
-  nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
-  nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
-  nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
-endfunction()
-
-augroup LSP
-  autocmd!
-  autocmd FileType cpp,c,rust call SetLSPShortcuts()
-augroup END
-
-
-let g:LanguageClient_diagnosticsDisplay = {
-      \1: {
-      \     "name": "Error",
-      \     "texthl": "ALEError",
-      \     "signText": "",
-      \     "signTexthl": "ALEErrorSign",
-      \     "virtualTexthl": "Error",
-      \ },
-      \ 2: {
-      \     "name": "Warning",
-      \     "texthl": "ALEWarning",
-      \     "signText": "⚠",
-      \     "signTexthl": "ALEWarningSign",
-      \     "virtualTexthl": "Todo",
-      \ },
-      \ 3: {
-      \     "name": "Information",
-      \     "texthl": "ALEInfo",
-      \     "signText": "ℹ",
-      \     "signTexthl": "ALEInfoSign",
-      \     "virtualTexthl": "Todo",
-      \ },
-      \ 4: {
-      \     "name": "Hint",
-      \     "texthl": "ALEInfo",
-      \     "signText": "➤",
-      \     "signTexthl": "ALEInfoSign",
-      \     "virtualTexthl": "Todo",
-      \ },
-      \}
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+set pumheight=20
 
 "SignColumn Definition for ALE and Vim
 "====================================================================================
