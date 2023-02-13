@@ -63,6 +63,10 @@ let g:vimwiki_list = [{'path': '~/wiki',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 let g:vimwiki_folding = 'custom'
 
+let g:vimwiki_root_dir = '~/wiki'
+noremap <Leader>wga :VimWikiGenerateAdjacencyGraph 1<CR>
+noremap <Leader>wgg :VimWikiGenerateGraph
+
 
 "### Nerdtree
 "#########################################################
@@ -128,16 +132,28 @@ inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 "#########################################################
 
 function! FoldText()
-  let sline = getline(v:foldstart)
-  let eline = getline(v:foldend)
-  let folded_line_num = v:foldend - v:foldstart
-  let sline_text = substitute(sline, '^"{\+', '', 'g')
-  let eline_text = substitute(eline, '^"\+}', '', 'g')
-  let fline_text = '...' . folded_line_num . '...'
-  let fillcharcount = &textwidth - len(sline_text) - len(eline_text) - len(fline_text)
-  return sline_text . fline_text . eline_text . repeat(' ', fillcharcount)
+  let l:lpadding = &fdc
+  redir => l:signs
+    execute "silent sign place buffer=".bufnr('%')
+  redir end
+  let l:padding += l:signs =~ 'id=' ? 2 : 0
+  let l:start = substitute(getline(v:foldstart), '\t', repeat(' ', &tabstop), 'g')
+  let l:end = substitute(substitute(getline(v:foldend), '\t', repeat(' ', &tabstop), 'g'), '^\s*', '', 'g')
+  let l:info = ' (' . (v:foldend - v:foldstart). ') '
+  let l:infolen = strlen(substitute(l:info, '.', 'x', 'g'))
+  let l:width = winwidth(0) - l:lpadding - l:infolen
+
+  let l:separator = ' ... '
+  let l:separatorlen = strlen(substitution(l:separator, '.', 'x', 'g'))
+  let l:start = strpart(l:start, 0, l:width - strlen(substitute(l:end . '.', 'x', 'g')) - l:separatorlen)
+  let l:text = l:start . l:separator . l:end
+
+  return l:text . l:info . repeat(' ', l:width - strlen(substitute(l:text, '.', 'x', 'g')))
 endfunction
 
-
+"function! BuildGraph()
+"  py3 /home/chuck/Documents/md-graph/md-graph.py ~/wiki/config.json
+"endfunction
+"command! VimWikiBuildGraph call BuildGraph()
 
 
