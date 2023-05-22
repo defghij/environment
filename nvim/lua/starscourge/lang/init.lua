@@ -1,0 +1,6 @@
+require 'starscourge.lang.lsp'
+require 'starscourge.lang.debugger'
+require 'starscourge.lang.syntax-hl'
+require 'starscourge.lang.completion'
+require 'starscourge.lang.linter'
+require 'starscourge.lang.tools'

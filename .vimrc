@@ -8,16 +8,12 @@ call plug#begin('~/.vim/plugged')
 " Any valid git URL is allowed
 Plug 'tpope/vim-sensible'
 Plug 'sheerun/vim-polyglot'
-Plug 'itchyny/lightline.vim'
-Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'tpope/vim-obsession'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'preservim/nerdtree'
 Plug 'mhinz/vim-startify'
 Plug 'vimwiki/vimwiki'
 Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'vim-syntastic/syntastic'
+Plug 'kaarmu/typst.vim'
 
 "Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh', }
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -31,6 +27,18 @@ call plug#end()
 "###                  CONFIGURATION                    ###
 "#########################################################
 
+
+"### File Encryption
+"#########################################################
+" let key_file = expand('~/.vim/vim.key')
+" let plain_idr = "encryption: true"
+" let cipher_idr = "VimCrypt"
+" autocmd VimEnter,BufEnter *
+"   \   if filereadable(key_file) && &filetype == 'vimwiki'
+"   \ |   if search(plain_idr, 'p') == 1 || search(cipher_idr, 'p') == 1
+"   \ |     execute 'set key=' . 'password'
+"   \ |   endif
+"   \ | endif
 
 "### Scratch
 "#########################################################
@@ -56,6 +64,10 @@ nmap <silent> gs <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> gh :call <SID>ShowDocumentation()<CR>
+
+inoremap <expr> <cr>   coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+inoremap <expr> <Down> coc#pum#visible() ? coc#pum#next(1)   : "\<Down>"
+inoremap <expr> <Up>   coc#pum#visible() ? coc#pum#prev(1)   : "\<Up>"
 
 "### VimWiki
 "#########################################################
@@ -94,9 +106,13 @@ set cursorline
 set hlsearch
 set autoread
 
+noremap <Leader>vt :vertical terminal<CR>
+noremap <Leader>ht :terminal<CR>
+
 command Reload :source ~/.vimrc
 
 set viewoptions-=options
+
 
 if has("folding") || (&filetype == 'vimwiki')
   set foldenable
@@ -150,6 +166,8 @@ function! FoldText()
 
   return l:text . l:info . repeat(' ', l:width - strlen(substitute(l:text, '.', 'x', 'g')))
 endfunction
+
+
 
 "function! BuildGraph()
 "  py3 /home/chuck/Documents/md-graph/md-graph.py ~/wiki/config.json

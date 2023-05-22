@@ -1,0 +1,6 @@
+set editing-mode vi
+set keymap vi
+set show-mode-in-prompt off
+#set vi-cmd-mode-string \1\033[0;34m\xE2\x95\xB0\342\224\200\xE2\x80\xA2\2
+#set vi-ins-mode-string \1\033[0;34m\xE2\x95\xB0\342\224\200\xE2\x9E\xA4\2
+set show-all-if-ambiguous on
