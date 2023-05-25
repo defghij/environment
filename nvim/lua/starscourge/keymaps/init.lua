@@ -36,8 +36,6 @@ map_key(ex_t, '<C-/>', '<Cmd>Commentary<CR>', default_settings)
 map_key(ex_t, '<C-z>', '<Cmd>undo<CR>', default_settings)
 map_key(ex_t, '<C-y>', '<Cmd>redo<CR>', default_settings)
 map_key(i, '<Esc>', '<Esc>`^', default_settings)
-map_key(n, '/', '<Nop>', default_settings)
-map_key(n, '?', '<Nop>', default_settings)
 map_key(ex_t, '<C-s>', function() require('starscourge.keymaps.utils').save_file() end, default_settings)
 
 -- Buffers.

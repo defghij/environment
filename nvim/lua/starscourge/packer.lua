@@ -102,13 +102,6 @@ return require('packer').startup {
             config = function() return require('tmux').setup() end,
         }
 
-        -- Programming experience.
---        use 'zbirenbaum/copilot.lua'
---        use {
---            'zbirenbaum/copilot-cmp',
---            after = { 'copilot.lua' },
---            config = function() require('copilot_cmp').setup() end,
---        }
         use 'lukas-reineke/indent-blankline.nvim'
         use 'mg979/vim-visual-multi'
         use 'RRethy/vim-illuminate'
