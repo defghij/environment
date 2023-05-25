@@ -1,3 +1,6 @@
+-- Load the scheme.
+vim.cmd.colorscheme 'nordic'
+
 -- Initial setup.
 require('nordic').setup {
     bright_border = false,
@@ -6,7 +9,7 @@ require('nordic').setup {
     },
     bold_keywords = false,
     italic_comments = true,
-    transparent_bg = false,
+    transparent_bg = true,
     cursorline = {
         theme = 'dark',
         bold = false,
@@ -46,11 +49,12 @@ local override = {
     WinSeparator = { fg = p.gray1 },
     WhichKeyBorder = { fg = p.gray1, bg = p.bg_dark },
 }
-require('nordic').setup { override = override }
+require('nordic').setup { 
+    override = override,
+    transparent_bg = true
+}
 
--- Load the scheme.
-vim.cmd.colorscheme 'nordic'
 
 -- After, not sure what is happening here...
-vim.cmd([[highlight DiagnosticShowBorder guibg=]] .. p.bg_dark .. ' guifg=' .. p.grey1)
-vim.cmd([[highlight SagaNormal guibg=]] .. p.bg_dark)
+--vim.cmd([[highlight DiagnosticShowBorder guibg=]] .. p.bg_dark .. ' guifg=' .. p.grey1)
+--vim.cmd([[highlight SagaNormal guibg=]] .. p.bg_dark)

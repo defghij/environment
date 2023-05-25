@@ -32,6 +32,13 @@ require('git-worktree').setup {
     update_on_change_command = 'e .',
     clearjumps_on_change = true,
     autopush = false,
+    current_line_blame_opts = {
+        virt_text = true,
+        virt_text_pos = 'right_align', -- 'eol' | 'overlay' | 'right_align'
+        delay = 50,
+        ignore_whitespace = false,
+      },
+    current_line_blame_formatter = '<author> ⚬ <author_time:%Y-%m-%d>',
 }
 
 --------------
