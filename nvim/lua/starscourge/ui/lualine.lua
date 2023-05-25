@@ -20,30 +20,6 @@ local function get_current_filename()
     return bufname ~= '' and vim.fn.fnamemodify(bufname, ':t') or ' [No Name]'
 end
 
-local function copilot_normal()
-    local status = require('copilot.api').status.data.status
-    if
-        string.find(status, 'Online')
-        or string.find(status, 'Enabled')
-        or string.find(status, 'Normal')
-        or string.find(status, 'InProgress')
-    then
-        return '  '
-    end
-    return ''
-end
-
-local function copilot_warn()
-    local status = require('copilot.api').status.data.status
-    if string.find(status, 'Warning') then return '  ' end
-    return ''
-end
-
-local function copilot_error()
-    local status = require('copilot.api').status.data.status
-    if string.find(status, 'Error') then return '  ' end
-    return ''
-end
 
 -- Gets the current buffer's filename with the filetype icon supplied
 -- by devicons.
@@ -256,9 +232,6 @@ require('lualine').setup {
                 color = { fg = c.gray3 },
                 icon = { ' ', color = { fg = c.gray4 } },
             },
-            { copilot_normal, color = { fg = c.gray4 }, padding = 0 },
-            { copilot_warn, color = { fg = c.yellow.base }, padding = 0 },
-            { copilot_error, color = { fg = c.red.base }, padding = 0 },
         },
         lualine_y = {},
         lualine_z = {
