@@ -68,7 +68,6 @@ map_key(n, ']E', function() require('starscourge.keymaps.utils').prev_error() en
 
 -- Misc.
 map_key(n, 'gl', '<Cmd>VimtexView<CR>', default_settings)
-map_key(n_v, '<Esc>', '<Cmd>noh<CR>', { silent = true, noremap = false })
 
 -- Debugger.
 map_key(n, 'S', function() require('dapui').float_element 'scopes' end, default_settings)
