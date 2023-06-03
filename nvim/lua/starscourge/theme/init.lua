@@ -1,2 +1,2 @@
-vim.opt.background = 'dark'
+--vim.opt.background = 'dark'
 require 'starscourge.theme.nordic'
